@@ -114,10 +114,13 @@ namespace AzureCosmosSupplyCollector {
                         $"SELECT VALUE COUNT(1) FROM {doc.Id}");
 
                     foreach (var row in rows) {
+                        var docStats = client.ReadDocumentCollectionAsync(doc.SelfLink).Result;
+
                         metrics.Add(new DataCollectionMetrics()
                         {
                             Name = doc.Id,
-                            RowCount = Int64.Parse(row.ToString())
+                            RowCount = (long)row,
+                            TotalSpaceKB = docStats.CollectionSizeUsage
                         });
 
                         break;
