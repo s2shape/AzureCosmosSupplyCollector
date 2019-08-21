@@ -43,11 +43,11 @@ namespace AzureCosmosSupplyCollectorTests
         {
             var metrics = new DataCollectionMetrics[] {
                 new DataCollectionMetrics()
-                    {Name = "EMAILS", RowCount = 200},
+                    {Name = "EMAILS", RowCount = 200, TotalSpaceKB = 544},
                 new DataCollectionMetrics()
-                    {Name = "LEADS", RowCount = 200},
+                    {Name = "LEADS", RowCount = 200, TotalSpaceKB = 672},
                 new DataCollectionMetrics()
-                    {Name = "CONTACTS", RowCount = 200},
+                    {Name = "CONTACTS", RowCount = 200, TotalSpaceKB = 640},
             };
 
             var result = _instance.GetDataCollectionMetrics(_container);
@@ -59,6 +59,7 @@ namespace AzureCosmosSupplyCollectorTests
                 Assert.NotNull(resultMetric);
 
                 Assert.Equal(metric.RowCount, resultMetric.RowCount);
+                Assert.Equal(metric.TotalSpaceKB, resultMetric.TotalSpaceKB);
             }
         }
 
