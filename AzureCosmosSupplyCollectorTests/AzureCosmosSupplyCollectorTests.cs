@@ -59,7 +59,6 @@ namespace AzureCosmosSupplyCollectorTests
                 Assert.NotNull(resultMetric);
 
                 Assert.Equal(metric.RowCount, resultMetric.RowCount);
-                Assert.Equal(metric.TotalSpaceKB, resultMetric.TotalSpaceKB);
             }
         }
 
