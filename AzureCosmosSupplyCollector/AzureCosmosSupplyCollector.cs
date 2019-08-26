@@ -69,17 +69,27 @@ namespace AzureCosmosSupplyCollector {
                     throw new ArgumentException($"Database {database} not found!");
                 }
 
+                var rowCount = client.CreateDocumentQuery(
+                    UriFactory.CreateDocumentCollectionUri(database, dataEntity.Collection.Name),
+                    $"SELECT VALUE COUNT(1) FROM {dataEntity.Collection.Name}");
+                var rows = (long)rowCount.ToList().FirstOrDefault();
+
+                double pct = 0.05 + (double) sampleSize / (rows <= 0 ? sampleSize : rows);
+
+                var r = new Random();
+
                 var list = client.CreateDocumentQuery(
                     UriFactory.CreateDocumentCollectionUri(database, dataEntity.Collection.Name),
                     $"SELECT t.{dataEntity.Name} FROM {dataEntity.Collection.Name} t", new FeedOptions() {MaxItemCount = sampleSize});
 
-                int count = 0;
                 foreach (var item in list) {
                     var obj = JObject.Parse(item.ToString());
-                    
-                    result.Add(obj[dataEntity.Name].ToString());
-                    
-                    if (++count >= sampleSize)
+
+                    if (r.NextDouble() < pct) {
+                        result.Add(obj[dataEntity.Name].ToString());
+                    }
+
+                    if (result.Count >= sampleSize)
                         break;
                 }
             }

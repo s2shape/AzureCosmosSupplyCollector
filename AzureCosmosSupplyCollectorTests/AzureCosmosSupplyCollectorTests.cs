@@ -85,7 +85,6 @@ namespace AzureCosmosSupplyCollectorTests
 
             var samples = _instance.CollectSample(entity, 2);
             Assert.Equal(2, samples.Count);
-            Assert.Contains("will@example.com", samples);
         }
 
 
