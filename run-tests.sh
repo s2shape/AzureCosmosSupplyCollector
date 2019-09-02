@@ -29,6 +29,7 @@ esac
 done
 set -- "${POSITIONAL[@]}" # restore positional parameters
 
+mkdir AzureCosmosSupplyCollectorTests/Properties
 echo { > AzureCosmosSupplyCollectorTests/Properties/launchSettings.json
 echo   \"profiles\": { >> AzureCosmosSupplyCollectorTests/Properties/launchSettings.json
 echo     \"AzureCosmosSupplyCollectorTests\": { >> AzureCosmosSupplyCollectorTests/Properties/launchSettings.json
