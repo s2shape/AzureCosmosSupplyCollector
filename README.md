@@ -10,7 +10,7 @@ Run `dotnet build`
 2) Open "Keys" and copy URI and Primary Key
 ![Keys](/docs/db_keys.png?raw=true)
 3) Open "Data Explorer" and create new empty container
-4) Use Data migration tool to upload files from `AzureCosmosSupplyCollectorTests/tests`
+4) Use Data migration tool to upload files from `AzureCosmosSupplyCollectorLoader/tests`
 https://docs.microsoft.com/en-us/azure/cosmos-db/import-data
 After importing you should see a container with 3 tables:
 ![Imported data](/docs/imported_data.png?raw=true)

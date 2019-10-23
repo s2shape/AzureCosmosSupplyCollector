@@ -1,0 +1,47 @@
+image: docker.pkg.github.com/s2shape/docker-images/s2shape-test-harness:latest
+
+stages:
+  - build
+  - test
+
+variables:
+  COSMOS_DB_DATABASE: TestDb
+  COSMOS_DB_KEY: $COSMOS_KEY
+  COSMOS_DB_URI: $COSMOS_URI
+
+before_script:
+  - dotnet restore -s https://www.myget.org/F/s2/ -s https://api.nuget.org/v3/index.json
+
+build:
+  stage: build
+  script:
+    - dotnet build
+
+test:
+  stage: test
+
+  script:
+    - ROOT_PROJECT_PATH=$(pwd)
+    - dotnet build
+    - dotnet publish
+    - cd $ROOT_PROJECT_PATH/AzureCosmosSupplyCollectorLoader/bin/Debug/netcoreapp2.2/publish
+    - cp -f /SupplyCollectorDataLoader/SupplyCollectorDataLoader/bin/Debug/netcoreapp2.2/SupplyCollectorDataLoader.runtimeconfig.json .
+    - dotnet SupplyCollectorDataLoader.dll -init AzureCosmosSupplyCollector "AccountEndpoint=$COSMOS_URI;AccountKey=$COSMOS_KEY;Database=$COSMOS_DB_DATABASE"
+    - dotnet SupplyCollectorDataLoader.dll -xunit AzureCosmosSupplyCollector "AccountEndpoint=$COSMOS_URI;AccountKey=$COSMOS_KEY;Database=$COSMOS_DB_DATABASE"
+    - cd $ROOT_PROJECT_PATH
+    - dotnet test
+
+load_test:
+  stage: test
+
+  script:
+    - ROOT_PROJECT_PATH=$(pwd)
+    - dotnet build
+    - dotnet publish
+    - cd $ROOT_PROJECT_PATH/AzureCosmosSupplyCollectorLoader/bin/Debug/netcoreapp2.2/publish
+    - cp -f /SupplyCollectorDataLoader/SupplyCollectorDataLoader/bin/Debug/netcoreapp2.2/SupplyCollectorDataLoader.runtimeconfig.json .
+    - dotnet SupplyCollectorDataLoader.dll -init AzureCosmosSupplyCollector "AccountEndpoint=$COSMOS_URI;AccountKey=$COSMOS_KEY;Database=$COSMOS_DB_DATABASE"
+    - dotnet SupplyCollectorDataLoader.dll -xunit AzureCosmosSupplyCollector "AccountEndpoint=$COSMOS_URI;AccountKey=$COSMOS_KEY;Database=$COSMOS_DB_DATABASE"
+    - dotnet SupplyCollectorDataLoader.dll -samples AzureCosmosSupplyCollector "AccountEndpoint=$COSMOS_URI;AccountKey=$COSMOS_KEY;Database=$COSMOS_DB_DATABASE" TestCollection Test1:int,Test2:string,Test3:bool,Test4:double,Test5 1000000
+    - cd $ROOT_PROJECT_PATH/AzureCosmosSupplyCollectorTests/bin/Debug/netcoreapp2.2/publish
+    - SupplyCollectorTestHarness -connect "AccountEndpoint=$COSMOS_URI;AccountKey=$COSMOS_KEY;Database=$COSMOS_DB_DATABASE" test_harness.config

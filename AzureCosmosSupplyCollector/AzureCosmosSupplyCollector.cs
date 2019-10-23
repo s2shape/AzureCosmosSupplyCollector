@@ -19,7 +19,7 @@ namespace AzureCosmosSupplyCollector {
             return $"AccountEndpoint={accountEndpoint};AccountKey={accountKey};Database={database}";
         }
 
-        private void ParseConnectString(string connectString, out string endpoint, out string accountKey,
+        public static void ParseConnectString(string connectString, out string endpoint, out string accountKey,
             out string database) {
 
             endpoint = null;

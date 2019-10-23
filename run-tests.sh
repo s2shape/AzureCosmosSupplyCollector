@@ -29,19 +29,9 @@ esac
 done
 set -- "${POSITIONAL[@]}" # restore positional parameters
 
-mkdir AzureCosmosSupplyCollectorTests/Properties
-echo { > AzureCosmosSupplyCollectorTests/Properties/launchSettings.json
-echo   \"profiles\": { >> AzureCosmosSupplyCollectorTests/Properties/launchSettings.json
-echo     \"AzureCosmosSupplyCollectorTests\": { >> AzureCosmosSupplyCollectorTests/Properties/launchSettings.json
-echo       \"commandName\": \"Project\", >> AzureCosmosSupplyCollectorTests/Properties/launchSettings.json
-echo       \"environmentVariables\": { >> AzureCosmosSupplyCollectorTests/Properties/launchSettings.json
-echo         \"COSMOS_DB_DATABASE\": \"${COSMOS_DB}\", >> AzureCosmosSupplyCollectorTests/Properties/launchSettings.json
-echo         \"COSMOS_DB_KEY\": \"${COSMOS_KEY}\", >> AzureCosmosSupplyCollectorTests/Properties/launchSettings.json
-echo         \"COSMOS_DB_URI\": \"${COSMOS_URI}\" >> AzureCosmosSupplyCollectorTests/Properties/launchSettings.json
-echo       } >> AzureCosmosSupplyCollectorTests/Properties/launchSettings.json
-echo     } >> AzureCosmosSupplyCollectorTests/Properties/launchSettings.json
-echo   } >> AzureCosmosSupplyCollectorTests/Properties/launchSettings.json
-echo } >> AzureCosmosSupplyCollectorTests/Properties/launchSettings.json
+export COSMOS_DB_DATABASE=$COSMOS_DB
+export COSMOS_DB_KEY=$COSMOS_KEY
+export COSMOS_DB_URI=$COSMOS_URI
 
 dotnet build
 dotnet test

@@ -12,7 +12,12 @@ namespace AzureCosmosSupplyCollectorTests
     {
         public LaunchSettingsFixture()
         {
-            using (var file = File.OpenText("Properties\\launchSettings.json"))
+            if(!File.Exists("Properties/launchSettings.json"))
+            {
+                return;
+            }
+
+            using (var file = File.OpenText("Properties/launchSettings.json"))
             {
                 var reader = new JsonTextReader(file);
                 var jObject = JObject.Load(reader);
